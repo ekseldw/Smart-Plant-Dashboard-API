@@ -7,9 +7,9 @@
 ### Run API server
 ```
 java -Xmx16g -jar build/libs/Smart-Plant-Dashboard-API-0.0.1-SNAPSHOT.jar
-
+```
 or 
-
+```
 sh run.sh
 ```
 
