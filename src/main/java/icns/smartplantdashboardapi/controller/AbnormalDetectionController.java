@@ -23,11 +23,21 @@ public class AbnormalDetectionController {
     public ResponseEntity save(@RequestBody AbnormalDetectionRequest abnormalDetectionRequest){
         return new ResponseEntity(CommonResponse.res(StatusCode.CREATED, abnormalDetectionService.save(abnormalDetectionRequest)),null, HttpStatus.CREATED);
     }
-
      */
 
     @GetMapping("/abnormal-detection")
-    public ResponseEntity find(@RequestParam(value="posId", required = false) Long posId, final Pageable pageable){
-        return new ResponseEntity(CommonResponse.res(StatusCode.OK, abnormalDetectionService.find(posId, pageable)),null, HttpStatus.OK);
+    public ResponseEntity findPage(@RequestParam(value="posId", required = false) Long posId, final Pageable pageable){
+        return new ResponseEntity(CommonResponse.res(StatusCode.OK, abnormalDetectionService.findPage(posId, pageable)),null, HttpStatus.OK);
     }
+
+    @GetMapping("/abnormal-detection-list")
+    public ResponseEntity find(@RequestParam(value="posId", required = false) Long posId){
+        return new ResponseEntity(CommonResponse.res(StatusCode.OK, abnormalDetectionService.find(posId)),null, HttpStatus.OK);
+    }
+
+    @GetMapping("/abnormal-detection/v2")
+    public ResponseEntity find(@RequestParam(value="posId", required = false) Long posId,@RequestParam(value="typeId",required = false) Long typeId, final Pageable pageable){
+        return new ResponseEntity(CommonResponse.res(StatusCode.OK, abnormalDetectionService.findPage(posId,typeId, pageable)),null, HttpStatus.OK);
+    }
+
 }

@@ -17,6 +17,7 @@ public class UserResponse {
 
     private Long id;
 
+
     public UserResponse(User user) {
         this.email = user.getEmail();
         this.id = user.getId();

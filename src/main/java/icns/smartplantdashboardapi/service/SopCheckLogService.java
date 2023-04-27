@@ -15,11 +15,19 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SopCheckLogService {
     private final SopCheckLogRepository sopCheckLogRepository;
-
+    
     @Transactional(readOnly = true)
     public Page<SopCheckLog> findAll(Pageable pageable) {
         Page<SopCheckLog> sopCheckLogList = sopCheckLogRepository.findAll(pageable);
         return sopCheckLogList;
     }
+    /* 
+    @Transactional(readOnly = true)
+    public List<SopCheckLog> findAll(){
+        List<SopCheckLog> sopCheckLogList = sopCheckLogRepository.findAll();
+        return sopCheckLogList; 
+    }
+    */
+    
 
 }

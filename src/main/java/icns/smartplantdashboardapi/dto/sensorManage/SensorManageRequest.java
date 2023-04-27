@@ -24,7 +24,7 @@ public class SensorManageRequest {
 
     private String ssContactPhone;
 
-
+    /*
     public SensorManage toEntity(SensorPos sensorPos, SensorType sensorType){
         return SensorManage.builder()
                 .ssContact(ssContact)
@@ -40,6 +40,24 @@ public class SensorManageRequest {
                 .rend(100)
                 .build();
 
+    }
+    */
+     public SensorManage toEntity(SensorPos sensorPos, SensorType sensorType){
+        return SensorManage.builder()
+                .ssContact(ssContact)
+                .ssContactExt(ssContactExt)
+                .ssContactPhone(ssContactPhone)
+                .ssPos(sensorPos)
+                .ssType(sensorType)
+                .rlev1(-80)
+                .rlev2(-60)
+                .rlev3(-40)
+                .rlev4(-20)
+                .rlev5(20)
+                .rlev6(40)
+                .rlev7(60)
+                .rlev8(80)
+                .build();
     }
 
 }

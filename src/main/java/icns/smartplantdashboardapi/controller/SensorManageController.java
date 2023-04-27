@@ -35,11 +35,19 @@ public class SensorManageController {
             @RequestBody SensorManageRequest sensorManageRequest){
         return new ResponseEntity(CommonResponse.res(StatusCode.OK,sensorManageService.updateById(ssId, sensorManageRequest)), null, HttpStatus.OK);
     }
-
+    
     @GetMapping("/sensor-manage")
     public ResponseEntity find(@RequestParam(value="posId", required = false) Long posId, final Pageable pageable){
         return new ResponseEntity(CommonResponse.res(StatusCode.OK, sensorManageService.find(posId, pageable)), null, HttpStatus.OK);
     }
+    
+
+    /* 
+    @GetMapping("/sensor-manage")
+    public ResponseEntity find(@RequestParam(value="posId", required = false) Long posId){
+        return new ResponseEntity(CommonResponse.res(StatusCode.OK, sensorManageService.find(posId)), null, HttpStatus.OK);
+    }
+    */
 
 
     @DeleteMapping("/sensor-manage/{ssId}")

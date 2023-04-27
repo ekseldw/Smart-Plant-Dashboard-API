@@ -37,6 +37,8 @@ public class SocketAbnormalDetectionResponse {
         this.posName = abnormalDetection.getSensorManage().getSsPos().getPosName();
         this.typeName = abnormalDetection.getSensorManage().getSsType().getTypeName();
         this.typeId = abnormalDetection.getSensorManage().getSsType().getTypeId();
+        //새로추가
+        
     }
 
 

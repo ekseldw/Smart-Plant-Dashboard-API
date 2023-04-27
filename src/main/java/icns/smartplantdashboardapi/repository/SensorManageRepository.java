@@ -11,7 +11,8 @@ import java.util.List;
 
 public interface SensorManageRepository extends JpaRepository<SensorManage, Long> {
     Page<SensorManage> findBySsPos_PosId(@Param(value="posId") Long posId, Pageable pageable);
+    //List<SensorManage> findBySsPos_PosId(@Param(value="posId") Long posId);
 
     Page<SensorManage> findBySsType_TypeId(@Param(value="typeId") Long typeId, Pageable pageable);
-
+    //List<SensorManage> findBySsType_TypeId(@Param(value="typeId") Long typeId);
 }

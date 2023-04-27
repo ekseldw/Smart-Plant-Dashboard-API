@@ -18,6 +18,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -59,7 +61,7 @@ public class SensorManageService {
         sensorManageRepository.deleteById(ssId);
         return deleted;
     }
-
+    
     @Transactional(readOnly = true)
     public Page<SensorManageResponse> find(Long posId, Pageable pageable){
         Page<SensorManageResponse> sensorManageList;
@@ -71,4 +73,18 @@ public class SensorManageService {
         }
         return sensorManageList;
     }
+    
+    /*  
+    @Transactional(readOnly = true)
+    public List<SensorManageResponse> find(Long posId){
+        List<SensorManageResponse> sensorManageList;
+        if(posId == null){
+            sensorManageList = sensorManageRepository.findAll().stream().map(SensorManageResponse::new).collect(Collectors.toList());
+
+        }else{
+            sensorManageList = sensorManageRepository.findBySsPos_PosId(posId).stream().map(SensorManageResponse::new).collect(Collectors.toList());
+        }
+        return sensorManageList;
+    }
+    */
 }

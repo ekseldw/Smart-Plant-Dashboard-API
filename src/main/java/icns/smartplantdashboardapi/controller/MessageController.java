@@ -27,10 +27,15 @@ public class MessageController {
 
         return new ResponseEntity(CommonResponse.res(StatusCode.OK, messageService.sendMessage("관리자", contentId)),null, HttpStatus.OK);
     }
-
+    /*
     @GetMapping("/message/log")
     public ResponseEntity findLog(final Pageable pageable){
         return new ResponseEntity(CommonResponse.res(StatusCode.OK, messageService.findAll(pageable)),null, HttpStatus.OK);
+    }
+    */
+    @GetMapping("/message/log")
+    public ResponseEntity findLog(){
+        return new ResponseEntity(CommonResponse.res(StatusCode.OK, messageService.findAll()),null, HttpStatus.OK);
     }
 
 }

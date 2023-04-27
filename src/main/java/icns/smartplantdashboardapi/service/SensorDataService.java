@@ -4,6 +4,8 @@ import icns.smartplantdashboardapi.advice.exception.SensorManageNotFoundExceptio
 import icns.smartplantdashboardapi.advice.exception.SensorPosNotFoundException;
 import icns.smartplantdashboardapi.domain.*;
 import icns.smartplantdashboardapi.dto.abnormalDetection.socket.SocketAbnormalDetectionResponse;
+import icns.smartplantdashboardapi.dto.sensorData.SensorDataGraphRequest;
+import icns.smartplantdashboardapi.dto.sensorData.SensorDataGraphResponse;
 import icns.smartplantdashboardapi.dto.sensorData.SensorDataRequest;
 import icns.smartplantdashboardapi.dto.sensorData.SensorDataResponse;
 import icns.smartplantdashboardapi.dto.sensorData.socket.SocketSensorDataResponse;
@@ -19,8 +21,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestParam;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -32,6 +37,7 @@ public class SensorDataService {
     private final SensorPosRepository sensorPosRepository;
     private final AbnormalDetectionRepository abnormalDetectionRepository;
     private final SimpMessageSendingOperations messageSendingOperations;
+
     @Transactional
     public Long save(SensorDataRequest sensorDataRequest) throws Exception{
         SensorManage sensorManage = sensorManageRepository.findById(sensorDataRequest.getSensorManageId()).orElseThrow(SensorManageNotFoundException::new);
@@ -54,20 +60,22 @@ public class SensorDataService {
 
         Integer currState = sensorManage.getSensorState();
         if(pastState == null){
-            System.out.println("Seneor Data Start");
+            System.out.println("Sensor Data Start");
         }
-        else if( currState > 1 && pastState < currState){
+        
+        else if( currState > 0 && pastState < currState){
             AbnormalDetection abnormalDetection = new AbnormalDetection(sensorManage, sensorManage.getSensorState());
             abnormalDetectionRepository.save(abnormalDetection);
             alertState(abnormalDetection);
         }
-
+        else {
+            System.out.println("detected but not displayed");
+        }
     }
 
     public void alertState(AbnormalDetection abnormalDetection){
         messageSendingOperations.convertAndSend("/alert", new SocketAbnormalDetectionResponse(abnormalDetection));
     }
-
 
     @Transactional(readOnly = true)
     public List<SensorDataResponse> findByPosId(Long posId){
@@ -129,4 +137,32 @@ public class SensorDataService {
         return csvPath;
 
     }
+
+    @Transactional(readOnly = true)
+    public List<SensorDataGraphResponse> findByPosIdSsId(SensorDataGraphRequest request){
+        LocalDateTime startDatetime = LocalDateTime.of(request.getStartTime(), LocalTime.of(0,0,0));
+        LocalDateTime endDatetime = LocalDateTime.of(request.getEndTime(), LocalTime.of(23,59,59));
+
+        return sensorDataRepository.findBySensorManage_SsIdAndSensorManage_SsPos_PosIdAndCreatedAtBetweenOrderByCreatedAtDesc(request.getSensorManageId(),request.getSensorPositionId(),startDatetime, endDatetime).stream().map(SensorDataGraphResponse::new).collect(Collectors.toList());
+    }
+
+    
+    @Transactional(readOnly = true)
+    public List<SensorDataGraphResponse> findByPosIdDate(SensorDataGraphRequest request){
+        LocalDateTime startDatetime = LocalDateTime.of(request.getStartTime(), LocalTime.of(0,0,0));
+        LocalDateTime endDatetime = LocalDateTime.of(request.getStartTime(), LocalTime.of(23,59,59));
+
+        return sensorDataRepository.findBySensorManage_SsPos_PosIdAndCreatedAtBetweenOrderByCreatedAtDesc(request.getSensorPositionId(),startDatetime,endDatetime).stream().map(SensorDataGraphResponse::new).collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public List<SensorDataGraphResponse> findByAllList(SensorDataGraphRequest request){
+        LocalDateTime startDatetime = LocalDateTime.of(request.getStartTime(), LocalTime.of(0,0,0));
+        LocalDateTime endDatetime = LocalDateTime.of(request.getEndTime(), LocalTime.of(23,59,59));
+        return sensorDataRepository.findByCreatedAtBetweenOrderByCreatedAtDesc(startDatetime, endDatetime).stream().map(SensorDataGraphResponse::new).collect(Collectors.toList());
+    }
+    
+
+   
+    
 }

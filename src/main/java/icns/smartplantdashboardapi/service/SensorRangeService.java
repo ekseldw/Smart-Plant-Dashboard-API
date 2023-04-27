@@ -11,16 +11,29 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 public class SensorRangeService {
     private final SensorManageRepository sensorManageRepository;
 
+    
     @Transactional(readOnly = true)
     public Page<SensorRangeResponse> findByPosId(Long posId, Pageable pageable){
         Page<SensorRangeResponse> sensorRangeList = sensorManageRepository.findBySsPos_PosId(posId, pageable).map(SensorRangeResponse::new);
         return sensorRangeList;
     }
+    
+    /* 
+    @Transactional(readOnly = true)
+    public List<SensorRangeResponse> findByPosId(Long posId){
+        List<SensorRangeResponse> sensorRangeList = sensorManageRepository.findBySsPos_PosId(posId).stream().map(SensorRangeResponse::new).collect(Collectors.toList());
+        return sensorRangeList;
+    }
+    */
+    
 
     @Transactional(readOnly = true)
     public SensorRangeResponse findBySsId(Long ssId){

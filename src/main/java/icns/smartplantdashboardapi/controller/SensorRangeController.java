@@ -18,13 +18,20 @@ import org.springframework.web.bind.annotation.*;
 public class SensorRangeController {
 
     private final SensorRangeService sensorRangeService;
-
+    
     @GetMapping("/sensor-range")
     public ResponseEntity findByPosId(
             @RequestParam("posId") Long posId,
             final Pageable pageable){
         return new ResponseEntity(CommonResponse.res(StatusCode.OK, sensorRangeService.findByPosId(posId, pageable)), null, HttpStatus.OK);
     }
+    /* 
+    @GetMapping("/sensor-range")
+    public ResponseEntity findByPosId(@RequestParam("posId") Long posId){
+        return new ResponseEntity(CommonResponse.res(StatusCode.OK, sensorRangeService.findByPosId(posId)), null, HttpStatus.OK);
+    }
+    */
+
 
     @PutMapping("/sensor-range/{ssId}")
     public ResponseEntity updateById(

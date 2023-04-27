@@ -13,23 +13,33 @@ public class UserDetailsImpl implements UserDetails {
 
     private Long id;
 
-    private String username;
+    private String userEmail;
+
+    private String userName;
+
+    private String userPhone;
 
     @JsonIgnore
     private String password;
 
     private Collection<? extends GrantedAuthority> authorities;
 
-    public UserDetailsImpl(Long id, String email, String password) {
+    public UserDetailsImpl(Long id, String email, String password, String name, String phone) {
         this.id = id;
-        this.username = email;
+        this.userEmail = email;
         this.password = password;
+        this.userName = name;
+        this.userPhone = phone;
     }
     public static UserDetailsImpl build(User user) {
         return new UserDetailsImpl(
                 user.getId(),
                 user.getEmail(),
-                user.getPassword());
+                user.getPassword(),
+                user.getName(),
+                user.getPhone());
+                
+                
     }
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -40,10 +50,20 @@ public class UserDetailsImpl implements UserDetails {
         return id;
     }
 
+   
+    public String getUserEmail() {
+        return userEmail;
+    }
+
     @Override
     public String getUsername() {
-        return username;
+        return userName;
     }
+
+    public String getUserPhone(){
+        return userPhone;
+    }
+    
 
     @Override
     public String getPassword() {

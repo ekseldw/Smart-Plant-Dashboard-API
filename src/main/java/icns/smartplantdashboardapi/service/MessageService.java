@@ -21,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -93,10 +94,16 @@ public class MessageService {
         return phoneList;
     }
 
-
+    /*
     @Transactional(readOnly = true)
     public Page<MessageLog> findAll(Pageable pageable){
         Page<MessageLog> messageLogList = messageLogRepository.findAll(pageable);
+        return messageLogList;
+    }
+    */
+    @Transactional(readOnly = true)
+    public List<MessageLog> findAll(){
+        List<MessageLog> messageLogList = messageLogRepository.findAll();
         return messageLogList;
     }
 }

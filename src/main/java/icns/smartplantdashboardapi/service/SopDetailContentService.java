@@ -20,6 +20,7 @@ public class SopDetailContentService {
     private final SopDetailContentRepository sopDetailContentRepository;
     private final SopCheckLogRepository sopCheckLogRepository;
     private final SituationRepository situationRepository;
+    private final UserRepository userRepository;
 
     @Transactional
     public Long save( SopDetailContentRequest sopDetailContentRequest){
@@ -70,7 +71,7 @@ public class SopDetailContentService {
     }
 
     @Transactional
-    public Long complete(String name, Long contentId){ //User user
+    public Long complete(String userName, Long contentId){ //User user
         SopDetailContent sopDetailContent = sopDetailContentRepository.findById(contentId).get();
         if(sopDetailContent.isComplete()){
             sopDetailContent.completeFalse();
@@ -81,7 +82,7 @@ public class SopDetailContentService {
                     .text(sopDetailContent.getText())
                     .situation(sopDetailContent.getSopDetail().getSituation().getName())
                     .level(sopDetailContent.getSopDetail().getLevel())
-                    .user(name)
+                    .user(userName)
                     .build();
             sopCheckLogRepository.save(sopCheckLog);
         }

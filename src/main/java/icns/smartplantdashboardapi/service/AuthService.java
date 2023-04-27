@@ -9,8 +9,12 @@ import icns.smartplantdashboardapi.dto.auth.JwtResponse;
 import icns.smartplantdashboardapi.dto.auth.LoginRequest;
 import icns.smartplantdashboardapi.dto.auth.SignupRequest;
 import icns.smartplantdashboardapi.dto.auth.UserResponse;
+import icns.smartplantdashboardapi.dto.auth.UpdateRequest;
 import icns.smartplantdashboardapi.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+
+import java.security.Principal;
+
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -19,6 +23,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -53,7 +59,7 @@ public class AuthService {
 
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
 
-        return new JwtResponse(jwt, userDetails.getId(),userDetails.getUsername());
+        return new JwtResponse(jwt, userDetails.getId(), userDetails.getUserEmail(), userDetails.getUsername(), userDetails.getUserPhone());
 
     }
 
@@ -68,5 +74,17 @@ public class AuthService {
         User user = userRepository.findByEmail(userDetails.getUsername()).get();
         return new UserResponse(user);
 
+    }
+
+    @Transactional
+    public Long update(UpdateRequest updateRequest){
+        Optional<User> user = userRepository.findById(updateRequest.getId());
+        User updated = user.get();
+        updated.setName(updateRequest.getName());
+        updated.setPassword(encoder.encode(updateRequest.getPassword()));
+        updated.setPhone(updateRequest.getPhone());
+
+        User saved = userRepository.save(updated);
+        return saved.getId();
     }
 }

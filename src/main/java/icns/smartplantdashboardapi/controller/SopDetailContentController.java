@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
+import icns.smartplantdashboardapi.config.details.UserDetailsImpl;
 import org.springframework.web.bind.annotation.*;
 
 @Api(tags = {"e-SOP 디테일 콘텐츠 관리"})
@@ -49,11 +50,12 @@ public class SopDetailContentController {
         return new ResponseEntity(CommonResponse.res(StatusCode.OK, sopDetailContentService.delete(contentId)), null, HttpStatus.OK);
     }
 
-    @PutMapping("/sop-detail/content/complete/{contentId}")
-    public ResponseEntity complete( @PathVariable(value="contentId") Long contentId){ //@AuthenticationPrincipal UserDetails userDetails,
-        //User user = userRepository.findByEmail(userDetails.getUsername()).get();
-        //return new ResponseEntity(CommonResponse.res(StatusCode.OK, sopDetailContentService.complete(user, contentId)), null, HttpStatus.OK);
-        return new ResponseEntity(CommonResponse.res(StatusCode.OK, sopDetailContentService.complete("관리자", contentId)), null, HttpStatus.OK);
+    @PutMapping("/sop-detail/content/complete/{contentId}/{userName}")
+    public ResponseEntity complete( @PathVariable(value="contentId") Long contentId, @PathVariable(value="userName") String userName){ //@AuthenticationPrincipal UserDetails userDetails,
+        //User userName = userRepository.findByName(userDetails.getUsername()).get();
+        
+        return new ResponseEntity(CommonResponse.res(StatusCode.OK, sopDetailContentService.complete(userName, contentId)), null, HttpStatus.OK);
+        //return new ResponseEntity(CommonResponse.res(StatusCode.OK, sopDetailContentService.complete("관리자", contentId)), null, HttpStatus.OK);
     }
 
     @PutMapping("/sop-detail/content/end")

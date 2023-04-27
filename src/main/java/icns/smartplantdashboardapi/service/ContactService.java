@@ -13,6 +13,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class ContactService {
@@ -35,7 +37,7 @@ public class ContactService {
         return new ContactResponse(contact);
 
     }
-
+    
     @Transactional(readOnly = true)
     public Page<ContactResponse> find(Long posId, Pageable pageable){
         Page<ContactResponse> contactList;
@@ -46,6 +48,21 @@ public class ContactService {
         }
         return contactList;
     }
+    /*
+    @Transactional(readOnly = true)
+    public List<Contact> find(Long posId){
+        List<Contact> contactList;
+        if(posId == null){
+            contactList = contactRepository.findAll();
+        }else{
+            contactList = contactRepository.findBySsPos_PosId(posId);
+        }
+        return contactList;
+    }
+     */
+    
+    
+
 
     @Transactional
     public Long deleteById(Long id){

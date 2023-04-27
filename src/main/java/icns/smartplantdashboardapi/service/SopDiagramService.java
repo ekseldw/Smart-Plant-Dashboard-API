@@ -42,20 +42,24 @@ public class SopDiagramService {
     }
 
     @Transactional
-    public Long updateDiagram(Long situationId, Integer level, String diagram, MultipartFile diagramImg) throws IOException {
-
-
-
-        Situation situation = situationRepository.findById(situationId).get();
-        SopDiagram sopDiagram = sopDiagramRepository.findBySituationAndLevel(situation, level).get();
-
-
+    // public Long updateDiagram(Long situationId, Integer level, String diagram, MultipartFile diagramImg) throws IOException {
+    public Long updateDiagram(Long situationId, Integer level, String diagram, MultipartFile diagramImg) {
+	    
+	Situation situation = situationRepository.findById(situationId).get();
+        // SopDiagram sopDiagram = sopDiagramRepository.findBySituationAndLevel(situation, level).get();
         String diagramImgPath = getDiagramImgPath(situationId, level);
         File file = new File(diagramImgPath);
-        diagramImg.transferTo(file);
+	// diagramImg.transferTo(file);
+	try {
+		diagramImg.transferTo(file);
+	} catch(IOException e) {
+		e.printStackTrace();
+	}
 
         // JSON Parsing
-        JSONObject jsonObject = new JSONObject(diagram);
+        try{
+		JSONObject jsonObject = new JSONObject(diagram);
+	System.out.println("[SopDiagramService.java] 2");
         JSONArray jsonArray = jsonObject.getJSONArray("node");
         for (int i=0;i<jsonArray.length();i++){
             JSONObject obj = jsonArray.getJSONObject(i);
@@ -81,20 +85,35 @@ public class SopDiagramService {
                     sopDetailRepository.save(newSopDetail);
                 }
             }
-
-
-
-
         }
+	} catch(Exception e) {
+		e.printStackTrace();
+	}
 
         // Save File
         String diagramPath = getFilePath(situationId, level);
-        FileWriter fileWriter = new FileWriter(diagramPath);
-        fileWriter.write(diagram);
-        fileWriter.close();
-
-        sopDiagram.update(diagramPath, diagramImgPath);
-        return sopDiagram.getId();
+        // FileWriter fileWriter = new FileWriter(diagramPath);
+        // fileWriter.write(diagram);
+        // fileWriter.close();
+	try {
+		FileWriter fileWriter = new FileWriter(diagramPath);
+		fileWriter.write(diagram);
+		fileWriter.close();
+	} catch(IOException e) {
+		e.printStackTrace();
+	}
+	
+	// SopDiagram sopDiagram = sopDiagramRepository.findBySituationAndLevel(situation, level).get();
+        // sopDiagram.update(diagramPath, diagramImgPath);
+	// return sopDiagram.getId();
+	SopDiagram sopDiagram = null;
+	try {
+		sopDiagram = sopDiagramRepository.findBySituationAndLevel(situation, level).get();
+		sopDiagram.update(diagramPath, diagramImgPath);
+	} catch(Exception e) {
+		e.printStackTrace();
+	}
+	return sopDiagram.getId();
     }
 
     @Transactional(readOnly = true)
@@ -110,11 +129,5 @@ public class SopDiagramService {
             String diagram = bufferedReader.readLine();
             return new SopDiagramResponse(sopDiagram, diagram, sopDiagram.getDiagramImgPath());
         }
-
-
     }
-
-
-
-
 }

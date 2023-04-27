@@ -18,18 +18,26 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class ConctactController {
     private final ContactService contactService;
-
+    
     @PostMapping("/contact")
     public ResponseEntity save(@RequestBody ContactRequest contactRequest){
         return new ResponseEntity(CommonResponse.res(StatusCode.CREATED, contactService.save(contactRequest)), null, HttpStatus.CREATED);
     }
-
+    
     @GetMapping("/contact")
     public ResponseEntity find(@RequestParam(value="posId", required = false) Long posId, final Pageable pageable){
         return new ResponseEntity(CommonResponse.res(StatusCode.OK, contactService.find(posId,pageable)),null, HttpStatus.OK);
 
     }
+    
+    /*
+    @GetMapping("/contact")
+    public ResponseEntity find(@RequestParam(value="posId", required = false) Long posId){
+        return new ResponseEntity(CommonResponse.res(StatusCode.OK, contactService.find(posId)),null, HttpStatus.OK);
 
+    }
+    */
+  
     @PutMapping("/contact/{id}")
     public ResponseEntity updateById(
             @PathVariable("id") Long id,

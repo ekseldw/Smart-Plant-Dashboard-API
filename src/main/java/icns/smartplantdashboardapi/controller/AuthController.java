@@ -2,6 +2,7 @@ package icns.smartplantdashboardapi.controller;
 
 import icns.smartplantdashboardapi.dto.auth.LoginRequest;
 import icns.smartplantdashboardapi.dto.auth.SignupRequest;
+import icns.smartplantdashboardapi.dto.auth.UpdateRequest;
 import icns.smartplantdashboardapi.dto.common.CommonResponse;
 import icns.smartplantdashboardapi.dto.common.StatusCode;
 import icns.smartplantdashboardapi.service.AuthService;
@@ -10,6 +11,7 @@ import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.handler.annotation.Headers;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -38,8 +40,11 @@ public class AuthController {
         return new ResponseEntity(CommonResponse.res(StatusCode.OK, authService.checkAuthState()), null, HttpStatus.OK);
     }
 
+    @PostMapping("/auth/update")
+    public ResponseEntity update(@Valid @RequestBody UpdateRequest updateRequest){
 
-
+        return new ResponseEntity(CommonResponse.res(StatusCode.OK,authService.update(updateRequest)), null, HttpStatus.CREATED);
+    }
 
 
 }
